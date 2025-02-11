@@ -17,6 +17,7 @@ jobs:
   # This job runs self-checking tests
   verif:
     runs-on: ubuntu-latest
+    container: ghdl/vunit:gcc
 
     steps:
       - uses: actions/checkout@v4
