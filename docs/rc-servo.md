@@ -2,9 +2,10 @@
 
 This document provides detailed information about the **Hitec HS-422 Deluxe Standard Servo**, renowned for its reliability, precision, and durable construction. The servo is widely used in RC models, robotics, and other applications requiring precise position control.
 
-![HS-422-Servo-Specs__93581](https://github.com/user-attachments/assets/1b88a5ba-9e4e-435e-a65f-9c2c3d3e2674)
-
 ---
+
+![HS-422-Servo-Specs__93581](https://github.com/user-attachments/assets/1b88a5ba-9e4e-435e-a65f-9c2c3d3e2674)
+_Picture 1.1_ HS 422 Servo Specification
 
 ## 1. Key Characteristics
 
@@ -21,8 +22,11 @@ This document provides detailed information about the **Hitec HS-422 Deluxe Stan
 
 - **Control System:**  
   - **Analog PWM** – the servo is controlled via a PWM signal with a period of approximately **20 ms** (50 Hz).  
-  - The typical operating PWM pulse width ranges between **900 µs** and **2100 µs** (with a center pulse of around 1500 µs).  
+  - The typical operating PWM pulse width ranges between **600 µs** and **2400 µs** (with a center pulse of around 1500 µs).  
   - The servo features a very small **deadband** of about **8 µs**, ensuring high precision.
+
+![ser0002_3](https://github.com/user-attachments/assets/471698ea-b46c-4a75-8100-d3deba151a96)     
+_Picture 1.2_ Shaft position depending on the PWM signal
 
 - **Motor and Mechanical Construction:**  
   - **Motor:** A 3-pole metal brushed motor (often described as a "3-pole metal brush ferrite" motor).
@@ -53,6 +57,9 @@ This document provides detailed information about the **Hitec HS-422 Deluxe Stan
   Detailed datasheets and technical specifications are available from distributors such as DigiKey, RobotShop, ServoDatabase.com, Mr MPX Hobbies, and Sig Manufacturing.
 
 ---
+
+![zice](https://github.com/user-attachments/assets/78804ed9-9597-46a2-99a2-aeef439611a1)        
+_Picture 1.3_ Servo pinout
 
 ## 3. Summary
 
