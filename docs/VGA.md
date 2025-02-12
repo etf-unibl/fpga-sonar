@@ -71,4 +71,4 @@ The VGA signal draws pixels row-by-row (horizontal timing), scanning from left t
 
 ![image](https://i.sstatic.net/NDfpg.png)
 
-Dodatno potrebno je postaviti pinove: VCLK -> PIN_A11, BLANK -> PIN_F10. 
+Dodatno, potrebno je postaviti pinove: VCLK -> PIN_A11, BLANK -> PIN_F10, SYNC_o -> PIN_C10
