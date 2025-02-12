@@ -32,7 +32,7 @@ begin
 	
 	    test_runner_setup(runner, runner_cfg);
        
-        i_A <= "00"; i_E <= '0';
+        i_E <= '0';
         wait for 10 ns;
         assert o_Y = "0000" report "Test failed for i_A = 00, i_E = 0" severity error;
         
