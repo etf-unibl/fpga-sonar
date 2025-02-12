@@ -17,15 +17,15 @@ jobs:
   # This job runs self-checking tests
   verif:
     runs-on: ubuntu-latest
-    container: ghdl/vunit:gcc
 
     steps:
       - uses: actions/checkout@v4
     
       - name: Run VUnit tests
         #uses: VUnit/vunit_action@master
+        uses: docker://ghdl/vunit:gcc
         with:
-          cmd: scripts/run.py --gtkwave-fmt vcd
+          args: scripts/run.py --gtkwave-fmt vcd
 
       - name: Archive results
         if: always()
