@@ -67,6 +67,10 @@ Here’s what each parameter means:
 
 The VGA signal draws pixels row-by-row (horizontal timing), scanning from left to right. Once a full row is drawn, a horizontal sync pulse (ths) signals the start of the next row.After drawing 480 rows, a vertical sync pulse (tvs) signals the start of a new frame. The back and front porch times provide necessary delays to allow monitors to synchronize properly.
 
+
+![image](https://digilent.com/reference/_media/learn/programmable-logic/tutorials/vga-display-congroller/4-vga-timing-specification.png)
+
+
 ## Pin Assignment 
 
 ![image](https://i.sstatic.net/NDfpg.png)
