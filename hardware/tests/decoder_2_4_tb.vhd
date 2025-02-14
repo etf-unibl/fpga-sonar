@@ -10,71 +10,69 @@ entity decoder_2_4_tb is
 end entity;
 
 architecture arch of decoder_2_4_tb is
-  signal i_A : std_logic_vector(1 downto 0) := "00";
-  signal i_E : std_logic := '0';
-  signal o_Y : std_logic_vector(3 downto 0);
+  signal A_i : std_logic_vector(1 downto 0) := "00";
+  signal E_i : std_logic := '0';
+  signal Y_o : std_logic_vector(3 downto 0);
 
   component decoder_2_4
     port(
-      i_A : in std_logic_vector(1 downto 0);
-      i_E : in std_logic;
-      o_Y : out std_logic_vector(3 downto 0)
+      A_i : in std_logic_vector(1 downto 0);
+      E_i : in std_logic;
+      Y_o : out std_logic_vector(3 downto 0)
     );
   end component;
 
 begin
-uut: entity design_lib.decoder_2_4 port map (i_A => i_A, i_E => i_E, o_Y => o_Y);
+uut: entity design_lib.decoder_2_4 port map (A_i => A_i, E_i => E_i, Y_o => Y_o);
 
 
   main : process
   begin
     test_runner_setup(runner, runner_cfg);
    
-
-  
-    i_A <= "11"; 
-    i_E <= '1';
+    A_i <= "11"; 
+    E_i <= '1';
     wait for 10 ns;  
-    i_A <= "00"; 
-    i_E <= '0';
+    A_i <= "00"; 
+    E_i <= '0';
     wait for 10 ns;  
 
     while test_suite loop
       if run("test_output_disabled") then
         check_equal(
-          o_Y, 
+          Y_o, 
           std_logic_vector'("0000"),
-          "o_Y != 0000 when i_E=0"
+          "Y_o != 0000 when E_i=0"
         );
 
       elsif run("test_output_enabled") then
         for a_val in 0 to 3 loop
-          i_A <= std_logic_vector(to_unsigned(a_val, 2));
-          i_E <= '1';
+          A_i <= std_logic_vector(to_unsigned(a_val, 2));
+          E_i <= '1';
           wait for 10 ns;  
           check_equal(
-            o_Y, 
+            Y_o, 
             std_logic_vector(to_unsigned(2**a_val, 4)),
-            "Test failed for i_A=" & to_string(i_A)
+            "Test failed for A_i=" & to_string(A_i)
           );
         end loop;
 
       elsif run("test_output_toggle") then
-        i_A <= "01";
-        i_E <= '1';
+        A_i <= "01";
+        E_i <= '1';
         wait for 10 ns; 
         check_equal(
-          o_Y, 
+          Y_o, 
           std_logic_vector'("0010"),
-          "o_Y != 0010 after enable"
+          "Y_o != 0010 after enable"
         );
 
-        i_E <= '0';
+        E_i <= '0';
         wait for 10 ns; 
         check_equal(
-          o_Y, 
+          Y_o, 
           std_logic_vector'("0000"),
-          "o_Y != 0000 after disable"
+          "Y_o != 0000 after disable"
         );
       end if;
     end loop;

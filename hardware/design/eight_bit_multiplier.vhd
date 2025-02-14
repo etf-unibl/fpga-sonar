@@ -1,7 +1,7 @@
 -----------------------------------------------------------------------------
 -- Faculty of Electrical Engineering
 -- PDS 2024
--- https://github.com/etf-unibl/pds-2024
+-- https://github.com/etf-unibl/fpga-sonar.git
 -----------------------------------------------------------------------------
 --
 -- unit name:     Eight bit multiplier
@@ -35,54 +35,38 @@
 -- ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE
 -----------------------------------------------------------------------------
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+--! @brief Eight-bit multiplier entity
+--! This entity defines an 8-bit multiplier that produces a 16-bit result.
+--! It takes two 8-bit unsigned inputs and outputs their product
 entity eight_bit_multiplier is
   port (
-  A_i   : in  std_logic_vector(7 downto 0);
-  B_i   : in  std_logic_vector(7 downto 0);
-  RES_o : out std_logic_vector(15 downto 0)
-);
+    A_i   : in  std_logic_vector(7 downto 0);
+    B_i   : in  std_logic_vector(7 downto 0);
+    RES_o : out std_logic_vector(15 downto 0)
+  );
 end eight_bit_multiplier;
-
-
-
-architecture eight_bit_multiplier_arch of eight_bit_multiplier is 
+--! @brief Eight-bit multiplier architecture
+--! Implements multiplication using partial product addition.
+architecture arch of eight_bit_multiplier is
 begin
-
-	process(A_i, B_i)
-	 variable p : unsigned(15 downto 0);
+--! Process that performs multiplication by partial addition
+  process(A_i, B_i)
+    variable p : unsigned(15 downto 0);
     variable tempA : unsigned(15 downto 0);
-	 variable tempB : unsigned(7 downto 0);
-	begin
-	
-		p := (others => '0');
-		tempA := "00000000" & unsigned(A_i);
-		tempB := unsigned(B_i);
-	
-		
-		
-		-- prolazak kroz B_i
-		
-		for i in 0 to 7 loop
-		
-			-- ako je i bit B_i jednak 1,dodaj pomjeren tempA  u p
-			if  tempB(i) = '1' then
-				p := p + tempA;	
-		   end if;
-			
-			tempA := tempA sll 1;
-			
-			
-		end loop;
-		
-		RES_o <= std_logic_vector(p);
-	
-	end process;
-	
-		
-
-end eight_bit_multiplier_arch;
+    variable tempB : unsigned(7 downto 0);
+  begin
+    p := (others => '0');
+    tempA := "00000000" & unsigned(A_i);
+    tempB := unsigned(B_i);
+    for i in 0 to 7 loop
+      if  tempB(i) = '1' then
+        p := p + tempA;
+      end if;
+      tempA := tempA sll 1;
+    end loop;
+    RES_o <= std_logic_vector(p);
+  end process;
+end arch;
