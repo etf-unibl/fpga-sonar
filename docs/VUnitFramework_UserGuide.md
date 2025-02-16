@@ -131,8 +131,7 @@ python run.py
 ```
 We should get a test report that looks like this :
 
-![TestReport](https://github.com/user-attachments/assets/dc05d4f4-2ab6-44b7-b576-6f6c46e1eae3)
-
+![TestReport](https://github.com/user-attachments/assets/ee74c148-a4cc-4d77-9e2c-5c8951627d39)
 
 If a test were to fail the reasons would be included in the report and the test would be marked as a fail.
 
