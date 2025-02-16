@@ -131,7 +131,8 @@ python run.py
 ```
 We should get a test report that looks like this :
 
-![TestReport](https://github.com/etf-unibl/fpga-sonar/blob/refs/heads/5-creating-documentation-for-vunit-framework/docs/Images/TestReport.png)
+![TestReport](https://github.com/user-attachments/assets/dc05d4f4-2ab6-44b7-b576-6f6c46e1eae3)
+
 
 If a test were to fail the reasons would be included in the report and the test would be marked as a fail.
 
