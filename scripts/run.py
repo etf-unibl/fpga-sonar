@@ -5,8 +5,8 @@ from vunit import VUnit
 from subprocess import call
 
 def post_run(results):
-    results.merge_coverage(file_name="coverage_data")
     if VU.get_simulator_name() == "ghdl":
+        results.merge_coverage(file_name="coverage_data")
         if results._simulator_if._backend == "gcc":
             call(["gcovr", "--html-details", "coverage.html", "coverage_data"])
         else:
@@ -25,10 +25,8 @@ LIB = VU.add_library("design_lib")
 LIB.add_source_files(SRC_PATH / "*.vhd")
 LIB.add_source_files(TESTS_PATH / "*.vhd")
 
-LIB.set_sim_option("enable_coverage", True)
-
-LIB.set_compile_option("modelsim.vcom_flags", ["+cover=bs"])
-LIB.set_compile_option("modelsim.vlog_flags", ["+cover=bs"])
-LIB.set_compile_option("enable_coverage", True)
+if VU.get_simulator_name() == "ghdl":
+    LIB.set_sim_option("enable_coverage", True)
+    LIB.set_compile_option("enable_coverage", True)
 
 VU.main(post_run=post_run)
