@@ -3,6 +3,10 @@ name: Verification
 
 # Controls when the workflow will run
 on:
+  # Triggers the workflow on push events on the "main" branch
+  push:
+    branches:
+    - main
   # Triggers the workflow on pull request events on the "main" branch
   pull_request:
     branches: [ "main" ]
@@ -27,10 +31,17 @@ jobs:
           image: ghdl/vunit:gcc
           cmd: scripts/run.py --gtkwave-fmt vcd
 
+      - name: Prepare coverage HTML report
+        run: |
+          mkdir coverage_report
+          cp coverage.* ./coverage_report/
+
       - name: Archive results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: vunit_out
+          path: |
+            coverage_report
+            vunit_out
           retention-days: 10
