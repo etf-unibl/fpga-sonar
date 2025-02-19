@@ -29,7 +29,13 @@ The HC-SR04 consists of a transmitter and a receiver. The transmitter emits an u
 
 6. Distance is calculated using the formula:
    
-   `$Distance = \frac{Time \times Speed of Sound}{2}$´
+   
+$$
+\[
+C_L = \frac{C_1 \cdot C_2}{C_1 + C_2} + C_{\text{stray}}
+Distance = \frac{Time \times Speed of Sound}{2}´
+\]
+$$
    
    where **Speed of Sound ≈ 343m/s (or 0.034 cm/µs)** at room temperature.
     
