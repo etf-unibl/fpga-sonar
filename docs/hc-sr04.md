@@ -32,8 +32,7 @@ The HC-SR04 consists of a transmitter and a receiver. The transmitter emits an u
    
 $$
 \[
-C_L = \frac{C_1 \cdot C_2}{C_1 + C_2} + C_{\text{stray}}
-Distance = \frac{Time \times Speed of Sound}{2}´
+Distance = \frac{Time \times Speed_of_Sound}{2}´
 \]
 $$
    
