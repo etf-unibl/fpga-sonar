@@ -4,11 +4,11 @@
 -- https://github.com/etf-unibl/fpga-sonar.git
 -------------------------------------------------------------------------------
 --
--- unit name:     Sonar Controller
+-- unit name:   Ultrasonic Sensor
 --
 -- description:
 --
---  This design implements a simple Ultrasonic sensor controller in form of a finite state machine (FSM) to:
+--  This design implements a simple Ultrasonic Sensor logic in form of a finite state machine (FSM) to:
 --    - Generate a 10 us trigger pulse.
 --    - Measure the echo pulse from the HC-SR04.
 --    - Compute the distance in centimeters.
@@ -44,8 +44,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
---! @brief Entity declaration for Sonar_Controller.
-entity Sonar_Controller is
+--! @brief Entity declaration for Ultrasonic_Sensor.
+entity Ultrasonic_Sensor is
   port (
     clk_i          : in  std_logic;                     --! 50 MHz clock input.
     reset_i        : in  std_logic;                     --! Asynchronous reset (active low).
@@ -56,10 +56,10 @@ entity Sonar_Controller is
     distance_cm_o  : out std_logic_vector(9 downto 0);  --! Computed distance in centimeters.
     object_found_o : out std_logic                      --! '1' if an object is detected.
   );
-end Sonar_Controller;
+end Ultrasonic_Sensor;
 
---! @brief Behavioral architecture for Sonar_Controller.
-architecture arch of Sonar_Controller is
+--! @brief Behavioral architecture for Ultrasonic_Sensor.
+architecture arch of Ultrasonic_Sensor is
 
   --! @brief FSM states for sonar measurement.
   type t_state_type is (IDLE, TRIGGER_PULSE, MEASURE_ECHO, DONE_STATE);
@@ -167,7 +167,7 @@ begin
 
   --! @brief Output assignments.
   distance_cm_o   <= std_logic_vector(distance_reg);   --! Computed distance output.
-  done_o          <= not done_reg;                     --! Measurement completion (active low).
-  object_found_o  <= not found;                        --! Object detection flag (active low).
+  done_o          <=  done_reg;                     --! Measurement completion.
+  object_found_o  <=  found;                        --! Object detection flag.
 
 end arch;
