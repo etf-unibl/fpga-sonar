@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['numeric_5fstd_0',['numeric_std',['../classeight__bit__multiplier.html#a2edc34402b573437d5f25fa90ba4013e',1,'eight_bit_multiplier']]]
+  ['g_5fupdate_5fperiod_0',['g_UPDATE_PERIOD',['../classservo__controller.html#a9bbe71b324c12852c78b3b4fd3d2837c',1,'servo_controller']]]
 ];
