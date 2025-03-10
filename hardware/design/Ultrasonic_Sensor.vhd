@@ -180,7 +180,7 @@ begin
 
   --! @brief Output assignments.
   distance_cm_o   <= std_logic_vector(distance_reg);   --! Computed distance output.
-  done_o          <= not done_reg;                     --! Measurement completion.
-  object_found_o  <= not found;                        --! Object detection flag.
+  done_o          <= done_reg;                     --! Measurement completion.
+  object_found_o  <= found;                        --! Object detection flag.
 
 end arch;

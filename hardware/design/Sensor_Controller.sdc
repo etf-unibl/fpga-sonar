@@ -1,4 +1,4 @@
-## Generated SDC file "Sensor_Controller .sdc"
+## Generated SDC file "Sensor_Controller.sdc"
 
 ## Copyright (C) 2020  Intel Corporation. All rights reserved.
 ## Your use of Intel Corporation's design tools, logic functions 
