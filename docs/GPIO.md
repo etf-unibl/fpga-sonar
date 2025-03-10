@@ -1,4 +1,4 @@
-#DE1-SoC GPIO pinout
+# DE1-SoC GPIO pinout
 
 This document consists of a detailed overview of the GPIO pins on the DE1-SoC board
 
