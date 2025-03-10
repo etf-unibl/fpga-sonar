@@ -4,7 +4,7 @@
 -- https://github.com/etf-unibl/fpga-sonar
 -----------------------------------------------------------------------------
 --
--- unit name:     Sonar_Controller_tb
+-- unit name:     Ultrasonic_Sensor_tb
 --
 -- description:
 --
@@ -44,11 +44,11 @@ use ieee.numeric_std.all;
 library vunit_lib;
 context vunit_lib.vunit_context;
 
-entity Sonar_Controller_tb is
+entity Ultrasonic_Sensor_tb is
   generic (runner_cfg : string);
-end entity Sonar_Controller_tb;
+end entity Ultrasonic_Sensor_tb;
 
-architecture arch of Sonar_Controller_tb is
+architecture arch of Ultrasonic_Sensor_tb is
   constant CLK_PERIOD          : time    := 20 ns;  -- 50 MHz clock
   constant CONVERSION_FACTOR   : integer := 2900;
   constant TRIGGER_PULSE_COUNT : integer := 500;    -- Same value as in design
@@ -59,10 +59,10 @@ architecture arch of Sonar_Controller_tb is
   signal echo_tb         : std_logic := '0';
   signal trigger_tb      : std_logic;
   signal done_tb         : std_logic;
-  signal distance_cm_tb  : std_logic_vector(9 downto 0);
+  signal distance_cm_tb  : std_logic_vector(8 downto 0);
   signal object_found_tb : std_logic;
 
-  component Sonar_Controller is
+  component Ultrasonic_Sensor is
     port (
         clk_i          : in  std_logic;
         reset_i        : in  std_logic;
@@ -70,13 +70,13 @@ architecture arch of Sonar_Controller_tb is
         echo_i         : in  std_logic;
         trigger_o      : out std_logic;
         done_o         : out std_logic;
-        distance_cm_o  : out std_logic_vector(9 downto 0);
+        distance_cm_o  : out std_logic_vector(8 downto 0);
         object_found_o : out std_logic
     );
   end component;
 
 begin
-  uut : Sonar_Controller
+  uut : Ultrasonic_Sensor
       port map (
           clk_i          => clk_tb,
           reset_i        => reset_tb,
@@ -103,7 +103,7 @@ begin
       wait for CLK_PERIOD * echo_cycles;
       echo_tb <= '0';
       -- Wait until the controller completes the measurement (done signal becomes '0')
-      wait until done_tb = '0';
+      wait until done_tb = '1';
     end procedure;
   begin
     test_runner_setup(runner, runner_cfg);
@@ -121,33 +121,33 @@ begin
         start_tb <= '0';
         pulse_echo(200 * CONVERSION_FACTOR);
         check_equal(unsigned(distance_cm_tb), 200, "Normal distance check");
-        check_equal(object_found_tb, '0', "Object found status");
+        check_equal(object_found_tb, '1', "Object found status");
 
       elsif run("test_min_valid_distance") then
-        -- Test minimum distance (3 cm, below the 4 cm threshold)
+        -- Test minimum distance (2 cm)
         start_tb <= '0';
-        pulse_echo(4 * CONVERSION_FACTOR);
-        check_equal(unsigned(distance_cm_tb), 4, "Minimum distance check");
-        check_equal(object_found_tb, '0', "Object found status");
+        pulse_echo(2 * CONVERSION_FACTOR);
+        check_equal(unsigned(distance_cm_tb), 2, "Minimum distance check");
+        check_equal(object_found_tb, '1', "Object found status");
 
       elsif run("test_max_valid_distance") then
         -- Test maximum valid distance (400 cm)
         start_tb <= '0';
         pulse_echo(400 * CONVERSION_FACTOR);
         check_equal(unsigned(distance_cm_tb), 400, "Maximum valid distance check");
-        check_equal(object_found_tb, '0', "Object found status");
+        check_equal(object_found_tb, '1', "Object found status");
 
       elsif run("test_timeout_distance") then
         -- Test exceeding maximum distance (>400 cm)
         start_tb <= '0';
         pulse_echo(401 * CONVERSION_FACTOR); -- Duration longer than maximum (timeout)
-        check_equal(unsigned(distance_cm_tb), 1023, "Timeout distance check");
-        check_equal(object_found_tb, '1', "Object not found status");
+        check_equal(unsigned(distance_cm_tb), 511, "Timeout distance check");
+        check_equal(object_found_tb, '0', "Object not found status");
 
       elsif run("test_too_close_distance") then
-        -- Test too close distance (3 cm, below the 4 cm threshold)
+        -- Test too close distance (1 cm, below the 2 cm threshold)
         start_tb <= '0';
-        pulse_echo(3 * CONVERSION_FACTOR);
+        pulse_echo(1 * CONVERSION_FACTOR);
         check_equal(unsigned(distance_cm_tb), 0, "Too close distance check");
         check_equal(object_found_tb, '0', "Object found status");
 
@@ -157,7 +157,7 @@ begin
         wait for CLK_PERIOD * TRIGGER_PULSE_COUNT;  -- Wait for trigger pulse to finish
         reset_tb <= '0';
         wait for CLK_PERIOD * 2;
-        check_equal(done_tb, '1', "Reset during measurement check");
+        check_equal(done_tb, '0', "Reset during measurement check");
       end if;
     end loop;
 
