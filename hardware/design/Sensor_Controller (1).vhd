@@ -51,7 +51,7 @@ entity Sensor_Controller is
     echo_i         : in  std_logic;                     --! Echo input from HC-SR04 sensor.
     trigger_o      : out std_logic;                     --! Trigger output to HC-SR04.
     done_o         : out std_logic;                     --! Measurement complete indicator.
-    distance_cm_o  : out std_logic_vector(9 downto 0);  --! Computed distance in centimeters.
+    distance_cm_o  : out std_logic_vector(8 downto 0);  --! Computed distance in centimeters.
     object_found_o : out std_logic                      --! '1' if an object is detected.
   );
 end Sensor_Controller;
@@ -68,7 +68,7 @@ architecture arch of Sensor_Controller is
       echo_i         : in  std_logic;
       trigger_o      : out std_logic;
       done_o         : out std_logic;
-      distance_cm_o  : out std_logic_vector(9 downto 0);
+      distance_cm_o  : out std_logic_vector(8 downto 0);
       object_found_o : out std_logic
     );
   end component;

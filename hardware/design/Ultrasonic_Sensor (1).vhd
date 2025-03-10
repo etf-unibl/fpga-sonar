@@ -53,7 +53,7 @@ entity Ultrasonic_Sensor is
     echo_i         : in  std_logic;                     --! Echo input from HC-SR04 sensor.
     trigger_o      : out std_logic;                     --! Trigger output to HC-SR04.
     done_o         : out std_logic;                     --! Measurement complete indicator.
-    distance_cm_o  : out std_logic_vector(9 downto 0);  --! Computed distance in centimeters.
+    distance_cm_o  : out std_logic_vector(8 downto 0);  --! Computed distance in centimeters.
     object_found_o : out std_logic                      --! '1' if an object is detected.
   );
 end Ultrasonic_Sensor;
@@ -74,6 +74,10 @@ architecture arch of Ultrasonic_Sensor is
   --! @brief Conversion factor for distance calculation.
   constant c_DISTANCE_CONVERSION_FACTOR : integer := 2900;
 
+  --! @brief Max/Min distance for the Ultrasonic Sensor
+  constant c_MAX_DISTANCE : integer := 400;
+  constant c_MIN_DISTANCE : integer := 2;
+
   --! @brief Counter for trigger pulse generation.
   signal trigger_counter : integer range 0 to c_TRIGGER_PULSE_COUNT := 0;
 
@@ -81,7 +85,7 @@ architecture arch of Ultrasonic_Sensor is
   signal echo_counter    : unsigned(31 downto 0) := (others => '0');
 
   --! @brief Register holding the computed distance.
-  signal distance_reg    : unsigned(9 downto 0) := (others => '0');
+  signal distance_reg    : unsigned(8 downto 0) := (others => '0');
 
   --! @brief Signal indicating measurement completion.
   signal done_reg        : std_logic := '0';
@@ -142,17 +146,26 @@ begin
               state <= DONE_STATE;
             end if;
           elsif echo_i = '0' and echo_counter > 0 then
-            found <= '1';                     --! Echo pulse ended; object detected.
-            state <= DONE_STATE;
+            if to_unsigned(to_integer(echo_counter) / c_DISTANCE_CONVERSION_FACTOR, distance_reg'length) < c_MIN_DISTANCE or
+               to_unsigned(to_integer(echo_counter) / c_DISTANCE_CONVERSION_FACTOR, distance_reg'length) > c_MAX_DISTANCE then
+              found <= '0';               --! Detected object is either too close or too far for accurate measurement.
+            else
+              found <= '1';              --! Echo pulse ended; object detected.
+            end if;
+            state <= DONE_STATE;         --! Move to Done state.
           end if;
 
         when DONE_STATE =>
           done_reg <= '1';                    --! Indicate measurement complete.
           if found = '1' then
+             --! Calculate distance in centimeters.
             distance_reg <= to_unsigned(to_integer(echo_counter) / c_DISTANCE_CONVERSION_FACTOR, distance_reg'length);
-                                              --! Calculate distance in centimeters.
           else
-            distance_reg <= (others => '0');  --! No object detected; distance set to 0.
+            if to_unsigned(to_integer(echo_counter) / c_DISTANCE_CONVERSION_FACTOR, distance_reg'length) > c_MAX_DISTANCE then
+              distance_reg <= (others => '1');    --! Value when object is too far.
+            elsif to_unsigned(to_integer(echo_counter) / c_DISTANCE_CONVERSION_FACTOR, distance_reg'length) < c_MIN_DISTANCE then
+              distance_reg <= (others => '0');    --! Value when object is too close.
+            end if;
           end if;
           if start_i = '1' then              --! Return to IDLE when start signal is deasserted.
             state <= IDLE;
@@ -167,7 +180,7 @@ begin
 
   --! @brief Output assignments.
   distance_cm_o   <= std_logic_vector(distance_reg);   --! Computed distance output.
-  done_o          <=  done_reg;                     --! Measurement completion.
-  object_found_o  <=  found;                        --! Object detection flag.
+  done_o          <= not done_reg;                     --! Measurement completion.
+  object_found_o  <= not found;                        --! Object detection flag.
 
 end arch;
