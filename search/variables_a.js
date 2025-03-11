@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['servo_5fangle_0',['servo_angle',['../classservo__controller_1_1arch.html#a74991691774bccd3705be2404fac6ca6',1,'servo_controller::arch']]],
-  ['servo_5fpwm_5fo_1',['servo_pwm_o',['../classservo__controller.html#a21b0310ac24054b156786d4cca1b82fc',1,'servo_controller']]],
-  ['std_5flogic_5f1164_2',['std_logic_1164',['../classdecoder__2__4.html#acd03516902501cd1c7296a98e22c6fcb',1,'decoder_2_4.std_logic_1164()'],['../classeight__bit__multiplier.html#acd03516902501cd1c7296a98e22c6fcb',1,'eight_bit_multiplier.std_logic_1164()'],['../classrc__servo.html#acd03516902501cd1c7296a98e22c6fcb',1,'rc_servo.std_logic_1164()'],['../classservo__controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'servo_controller.std_logic_1164()']]]
+  ['phase_0',['phase',['../classservo__controller_1_1arch.html#a2ea2f2442b3ffd609f54f2e65552b712',1,'servo_controller::arch']]],
+  ['pwm_5fo_1',['pwm_o',['../classrc__servo.html#accd4769fde22eb60efba3b2923d05a72',1,'rc_servo']]],
+  ['pwm_5fperiod_5fcounter_2',['pwm_period_counter',['../classservo__controller_1_1arch.html#a309e6356b96a29fad6e223587301350a',1,'servo_controller::arch']]],
+  ['pwm_5freg_3',['pwm_reg',['../classrc__servo_1_1arch.html#a82cdb640353b1c4d0aec90ced1eafbce',1,'rc_servo::arch']]]
 ];
