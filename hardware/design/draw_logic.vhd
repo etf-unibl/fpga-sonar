@@ -4,14 +4,13 @@
 -- https://github.com/etf-unibl/fpga-sonar.git
 -------------------------------------------------------------------------------
 --
--- unit name:     draw_logic
+-- unit name:     Draw Logic for VGA Controller
 --
 -- description:
 --
---   This module handles the drawing logic for a VGA display. It renders three
---   concentric half-circles (red, yellow, and green) and a small black circle
---   that moves in a predefined path between these zones, simulating an object
---   detection system.
+--   This module implements the drawing logic for a VGA controller. It draws
+--   concentric circles (red, yellow, green) and an object (point) based on
+--   the given angle and distance. The object blinks at a defined rate.
 --
 -------------------------------------------------------------------------------
 -- Copyright (c) 2024 Faculty of Electrical Engineering
@@ -42,169 +41,192 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
---! @brief Drawing logic for VGA display with moving object simulation.
---! This module draws three concentric half-circles (red, yellow, and green)
---! and a small black circle that moves between these zones.
+--! @brief Draw Logic for VGA Controller.
+--! This module draws concentric circles and an object (point) based on the
+--! given angle and distance. The object blinks at a defined rate.
 entity draw_logic is
-  port(
-    clk_i  : in  std_logic; --! Clock signal
-    rst_i  : in  std_logic; --! Reset signal
-    hPos_i : in  integer;   --! Current horizontal position
-    vPos_i : in  integer;   --! Current vertical position
-    r_o    : out std_logic_vector(7 downto 0); --! Red color output (8 bits)
-    g_o    : out std_logic_vector(7 downto 0); --! Green color output (8 bits)
-    b_o    : out std_logic_vector(7 downto 0)  --! Blue color output (8 bits)
+  port (
+    clk_i       : in  std_logic; --! Clock signal
+    rst_i       : in  std_logic; --! Reset signal
+    hPos_i      : in  integer;   --! Horizontal position
+    vPos_i      : in  integer;   --! Vertical position
+    de_i        : in  std_logic; --! Data enable signal
+    angle_i     : in  std_logic_vector(7 downto 0); --! Angle input (0-179)
+    distance_i  : in  std_logic_vector(8 downto 0); --! Distance input (2-400)
+    r_o         : out std_logic_vector(7 downto 0); --! Red color output
+    g_o         : out std_logic_vector(7 downto 0); --! Green color output
+    b_o         : out std_logic_vector(7 downto 0)  --! Blue color output
   );
 end entity draw_logic;
 
 architecture arch of draw_logic is
 
-  --! @brief Circle parameters.
-  constant c_CIRCLE_X_CENTER : integer := 320; --! X-coordinate of the circle center
-  constant c_CIRCLE_Y_CENTER : integer := 480; --! Y-coordinate of the circle center (bottom of the screen)
-  constant c_RED_RADIUS      : integer := 160; --! Radius of the red circle
-  constant c_YELLOW_RADIUS   : integer := 320; --! Radius of the yellow circle
-  constant c_GREEN_RADIUS    : integer := 480; --! Radius of the green circle
+  -- Constants for screen center and circle radii
+  constant c_SCREEN_CENTER_X : integer := 320; --! X center of the screen
+  constant c_SCREEN_CENTER_Y : integer := 480; --! Y center of the screen
+  constant c_RED_RADIUS    : integer := 160; --! Radius for red zone
+  constant c_YELLOW_RADIUS : integer := 320; --! Radius for yellow zone
+  constant c_GREEN_RADIUS  : integer := 480; --! Radius for green zone
 
-  --! @brief Small circle parameters.
-  constant c_SMALL_CIRCLE_RADIUS   : integer := 5; --! Radius of the small black circle
-  constant c_SMALL_CIRCLE_DURATION : integer := 100_000_000; --! Duration for small circle to complete a cycle
+  -- Look-up table for sine values (0 to 90, scaled to 1000)
+  type trig_lut is array (0 to 90) of integer;
+  constant c_SIN_LUT : trig_lut := (
+    0, 17, 35, 52, 70, 87, 105, 122, 139, 156,
+    173, 190, 208, 225, 242, 259, 276, 292, 309, 326,
+    342, 358, 375, 391, 407, 423, 438, 454, 470, 485,
+    500, 515, 530, 544, 558, 573, 588, 601, 615, 629,
+    642, 656, 670, 682, 695, 707, 718, 731, 743, 754,
+    766, 777, 788, 799, 809, 819, 829, 839, 848, 857,
+    866, 875, 883, 891, 899, 906, 913, 920, 927, 933,
+    940, 945, 951, 956, 961, 966, 970, 974, 978, 982,
+    985, 988, 990, 992, 994, 996, 997, 999, 999, 999,
+    1000
+  );
 
-  --! @brief Angles for each zone.
-  constant c_ANGLE_RED    : integer := 30;  --! Angle for the red zone (30 degrees)
-  constant c_ANGLE_YELLOW : integer := 90;  --! Angle for the yellow zone (90 degrees)
-  constant c_ANGLE_GREEN  : integer := 120; --! Angle for the green zone (120 degrees)
+  -- Signals for object position
+  signal obj_x       : integer := 0; --! X position of the object
+  signal obj_y       : integer := 0; --! Y position of the object
+  signal valid_angle : boolean := false; --! Flag for valid angle
+  signal valid_dist  : boolean := false; --! Flag for valid distance
 
-  --! @brief Precalculated trigonometric values.
-  constant c_SCALE   : integer := 1000; --! Scaling factor for trigonometric calculations
-  constant c_PI      : integer := 3141; --! Pi value scaled by 1000
-  constant c_COS_30  : integer := 866;  --! Cosine of 30 degrees scaled by 1000
-  constant c_SIN_30  : integer := 500;  --! Sine of 30 degrees scaled by 1000
-  constant c_COS_90  : integer := 0;    --! Cosine of 90 degrees scaled by 1000
-  constant c_SIN_90  : integer := 1000; --! Sine of 90 degrees scaled by 1000
-  constant c_COS_120 : integer := -500; --! Cosine of 120 degrees scaled by 1000
-  constant c_SIN_120 : integer := 866;  --! Sine of 120 degrees scaled by 1000
+  -- Blinking signals
+  signal blink_counter : integer := 0; --! Counter for blinking
+  signal blink_state   : std_logic := '0'; --! Blink state (0 = off, 1 = on)
+  constant c_BLINK_RATE  : integer := 3000000; --! Blink rate(adjust for speed)
 
-  --! @brief Signals for distances.
-  signal red_distance : integer := 100; --! Distance for the red zone
-  signal yellow_distance   : integer := 200; --! Distance for the yellow zone
-  signal green_distance : integer := 400; --! Distance for the green zone
+  -- Function to calculate sine using LUT
+  function sin_lookup(angle : integer) return integer is
+  begin
+    if angle <= 90 then
+      return c_SIN_LUT(angle);
+    else
+      return c_SIN_LUT(180 - angle); -- Symmetry for 90 - 180
+    end if;
+  end function sin_lookup;
 
-  --! @brief Signals for the small circle position.
-  signal small_circle_x : integer := 0; --! X position of the small circle
-  signal small_circle_y : integer := 0; --! Y position of the small circle
-
-  --! @brief Signals for timing and position control.
-  signal counter : integer := 0; --! Counter for timing
-  signal position   : integer := 0; --! Current position of the small circle movement
-  signal cycle_complete : std_logic := '0'; --! Indicates if the cycle is complete
+  -- Function to calculate cosine using LUT
+  function cos_lookup(angle : integer) return integer is
+  begin
+    if angle <= 90 then
+      return -c_SIN_LUT(90 - angle);
+    else
+      return c_SIN_LUT(angle - 90); -- Symmetry for 90 - 180
+    end if;
+  end function cos_lookup;
 
 begin
 
-  --! @brief Process for counting time and changing phases.
-  --! This process handles the timing and position transitions for the small circle.
-  process(clk_i, rst_i)
+  -----------------------------------------------------------------------------
+  -- Process to calculate object position based on angle and distance
+  -----------------------------------------------------------------------------
+  process(clk_i)
+    variable int_angle       : integer; -- Integer angle
+    variable int_distance    : integer; -- Integer distance
+    variable int_distance_px : integer; -- Distance in pixels
   begin
-    if rst_i = '0' then
-      counter <= 0;
-      position <= 0;
-      cycle_complete <= '0';
-    elsif rising_edge(clk_i) then
-      if cycle_complete = '0' then
-        if counter < c_SMALL_CIRCLE_DURATION then
-          counter <= counter + 1;
+    if rising_edge(clk_i) then
+      if rst_i = '0' then
+        -- Reset object position
+        obj_x <= 0;
+        obj_y <= 0;
+      else
+        -- Convert input values to integers
+        int_angle := to_integer(unsigned(angle_i));
+        int_distance := to_integer(unsigned(distance_i));
+
+        -- Validate angle and distance
+        valid_angle <= (int_angle >= 0 and int_angle <= 179);
+        valid_dist  <= (int_distance >= 2 and int_distance <= 400);
+
+        -- Calculate object position if valid
+        if valid_angle and valid_dist then
+          -- Scale distance to pixels (400 cm -> 480 pixels)
+          int_distance_px := (int_distance * 480) / 400;
+
+          -- Calculate object coordinates (from bottom of the screen)
+          obj_x <= c_SCREEN_CENTER_X + (int_distance_px *
+          cos_lookup(int_angle)) / 1000;
+          obj_y <= c_SCREEN_CENTER_Y - (int_distance_px *
+          sin_lookup(int_angle)) / 1000; -- Y from bottom
         else
-          counter <= 0;
-          if position < 4 then
-            position <= position + 1; -- Move to the next position
-          else
-            position <= 0; -- Reset position to the beginning
-            cycle_complete <= '0'; -- Reset the cycle complete signal
-          end if;
+          -- Invalid input, reset object position
+          obj_x <= 0;
+          obj_y <= 0;
         end if;
       end if;
     end if;
   end process;
 
-  --! @brief Process for setting the position of the small circle.
-  --! This process updates the position of the small circle based on the current position.
-  process(position, red_distance, yellow_distance, green_distance)
+  -----------------------------------------------------------------------------
+  -- Process to control blinking
+  -----------------------------------------------------------------------------
+  process(clk_i)
   begin
-    case position is
-      when 0 => -- Red zone (30 degrees)
-        small_circle_x <= c_CIRCLE_X_CENTER + (red_distance * c_COS_30) / c_SCALE;
-        small_circle_y <= c_CIRCLE_Y_CENTER - (red_distance * c_SIN_30) / c_SCALE;
-      when 1 => -- Yellow zone (90 degrees)
-        small_circle_x <= c_CIRCLE_X_CENTER + (yellow_distance * c_COS_90) / c_SCALE;
-        small_circle_y <= c_CIRCLE_Y_CENTER - (yellow_distance * c_SIN_90) / c_SCALE;
-      when 2 => -- Green zone (120 degrees)
-        small_circle_x <= c_CIRCLE_X_CENTER + (green_distance * c_COS_120) / c_SCALE;
-        small_circle_y <= c_CIRCLE_Y_CENTER - (green_distance * c_SIN_120) / c_SCALE;
-      when 3 => -- Yellow zone (90 degrees, returning)
-        small_circle_x <= c_CIRCLE_X_CENTER + (yellow_distance * c_COS_90) / c_SCALE;
-        small_circle_y <= c_CIRCLE_Y_CENTER - (yellow_distance * c_SIN_90) / c_SCALE;
-      when 4 => -- Red zone (30 degrees, returning)
-        small_circle_x <= c_CIRCLE_X_CENTER + (red_distance * c_COS_30) / c_SCALE;
-        small_circle_y <= c_CIRCLE_Y_CENTER - (red_distance * c_SIN_30) / c_SCALE;
-      when others =>
-        small_circle_x <= 0;
-        small_circle_y <= 0;
-    end case;
+    if rising_edge(clk_i) then
+      if rst_i = '0' then
+        blink_counter <= 0;
+        blink_state <= '0';
+      else
+        if blink_counter = c_BLINK_RATE then
+          blink_counter <= 0;
+          blink_state <= not blink_state; -- Toggle blink state
+        else
+          blink_counter <= blink_counter + 1;
+        end if;
+      end if;
+    end if;
   end process;
 
-  --! @brief Process for rendering the display.
-  --! This process handles the rendering of the concentric circles and the small black circle.
-  process(hPos_i, vPos_i, small_circle_x, small_circle_y, position)
-    variable x_diff : integer;
-    variable y_diff : integer;
-    variable distance_squared : integer;
-    variable small_circle_distance_squared : integer;
+  -----------------------------------------------------------------------------
+  -- Process to draw concentric circles and object
+  -----------------------------------------------------------------------------
+  process(hPos_i, vPos_i, obj_x, obj_y, de_i, valid_angle,
+          valid_dist, blink_state)
+    variable x_diff : integer; -- X difference from center
+    variable y_diff : integer; -- Y difference from center
+    variable distance_squared : integer; -- Squared distance from center
   begin
-    -- Calculate distance from the center
-    x_diff := hPos_i - c_CIRCLE_X_CENTER;
-    y_diff := vPos_i - c_CIRCLE_Y_CENTER;
-    distance_squared := (x_diff * x_diff) + (y_diff * y_diff);
+    if de_i = '1' then
+      -- Draw the object (point) if valid and blinking state is on
+      if valid_angle and valid_dist and blink_state = '1' and
+         (hPos_i >= obj_x - 3 and hPos_i <= obj_x + 3) and
+         (vPos_i >= obj_y - 3 and vPos_i <= obj_y + 3) then
+        r_o <= (others => '0');
+        g_o <= (others => '0');
+        b_o <= (others => '0');
+      else
+        -- Draw concentric circles (from bottom of the screen)
+        x_diff := hPos_i - c_SCREEN_CENTER_X;
+        y_diff := c_SCREEN_CENTER_Y - vPos_i; -- Y is measured from the bottom
+        distance_squared := (x_diff * x_diff) + (y_diff * y_diff);
 
-    -- Calculate distance from the small circle
-    x_diff := hPos_i - small_circle_x;
-    y_diff := vPos_i - small_circle_y;
-    small_circle_distance_squared := (x_diff * x_diff) + (y_diff * y_diff);
-
-    -- Render zones and the small circle
-    if (distance_squared <= c_RED_RADIUS * c_RED_RADIUS) and (vPos_i <= c_CIRCLE_Y_CENTER) then
-      if small_circle_distance_squared <= c_SMALL_CIRCLE_RADIUS * c_SMALL_CIRCLE_RADIUS then
-        r_o <= (others => '0');
-        g_o <= (others => '0');
-        b_o <= (others => '0'); -- Black circle
-      else
-        r_o <= (others => '1');
-        g_o <= (others => '0');
-        b_o <= (others => '0'); -- Red zone
-      end if;
-    elsif (distance_squared <= c_YELLOW_RADIUS * c_YELLOW_RADIUS) and (vPos_i <= c_CIRCLE_Y_CENTER) then
-      if small_circle_distance_squared <= c_SMALL_CIRCLE_RADIUS * c_SMALL_CIRCLE_RADIUS then
-        r_o <= (others => '0');
-        g_o <= (others => '0');
-        b_o <= (others => '0'); -- Black circle
-      else
-        r_o <= (others => '1');
-        g_o <= (others => '1');
-        b_o <= (others => '0'); -- Yellow zone
-      end if;
-    elsif (distance_squared <= c_GREEN_RADIUS * c_GREEN_RADIUS) and (vPos_i <= c_CIRCLE_Y_CENTER) then
-      if small_circle_distance_squared <= c_SMALL_CIRCLE_RADIUS * c_SMALL_CIRCLE_RADIUS then
-        r_o <= (others => '0');
-        g_o <= (others => '0');
-        b_o <= (others => '0'); -- Black circle
-      else
-        r_o <= (others => '0');
-        g_o <= (others => '1');
-        b_o <= (others => '0'); -- Green zone
+        -- Red zone
+        if distance_squared <= c_RED_RADIUS * c_RED_RADIUS then
+          r_o <= (others => '1'); -- Red
+          g_o <= (others => '0');
+          b_o <= (others => '0');
+        -- Yellow zone
+        elsif distance_squared <= c_YELLOW_RADIUS * c_YELLOW_RADIUS then
+          r_o <= (others => '1'); -- Yellow
+          g_o <= (others => '1');
+          b_o <= (others => '0');
+        -- Green zone
+        elsif distance_squared <= c_GREEN_RADIUS * c_GREEN_RADIUS then
+          r_o <= (others => '0'); -- Green
+          g_o <= (others => '1');
+          b_o <= (others => '0');
+        -- Background
+        else
+          r_o <= (others => '0'); -- Black
+          g_o <= (others => '0');
+          b_o <= (others => '0');
+        end if;
       end if;
     else
+      -- Blanking period
       r_o <= (others => '0');
       g_o <= (others => '0');
-      b_o <= (others => '0'); -- Black background
+      b_o <= (others => '0');
     end if;
   end process;
 

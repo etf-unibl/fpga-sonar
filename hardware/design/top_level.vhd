@@ -4,14 +4,13 @@
 -- https://github.com/etf-unibl/fpga-sonar.git
 -------------------------------------------------------------------------------
 --
--- unit name:     VGA Controller that Draws Colored Zones
+-- unit name:     Top-Level VGA Controller
 --
 -- description:
 --
---   This file implements a simple VGA controller which is able to draw
---   multiple colored zones on the screen. The zones are defined by their
---   boundaries and are drawn in different colors (red, yellow, and green)
---   on a white background.
+--   This module is the top-level entity for the VGA controller. It instantiates
+--   the VGA controller and the drawing logic, connecting their signals to
+--   generate a VGA output with concentric circles and a blinking object.
 --
 -------------------------------------------------------------------------------
 -- Copyright (c) 2024 Faculty of Electrical Engineering
@@ -41,9 +40,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
---! @brief Top-level module for the VGA controller and circle drawing logic.
---! This module instantiates the VGA controller and circle drawing logic,
---! connecting their signals to generate a VGA output with concentric circles.
+--! @brief Top-Level VGA Controller.
+--! This module instantiates the VGA controller and the drawing logic,
+--! connecting their signals to generate a VGA output with concentric circles
+--! and a blinking object.
 entity top_level is
   port(
     clk_i   : in  std_logic; --! Clock signal
@@ -61,43 +61,45 @@ end entity top_level;
 
 architecture arch of top_level is
 
-  --! @brief Component declaration for the VGA controller.
   component vga_controller is
     port(
-      clk_i   : in  std_logic; --! Clock signal
-      rst_i   : in  std_logic; --! Reset signal
-      vclk_o  : out std_logic; --! VGA pixel clock
-      hsync_o : out std_logic; --! Horizontal sync signal
-      vsync_o : out std_logic; --! Vertical sync signal
-      blank_o : out std_logic; --! Blanking signal
-      sync_o  : out std_logic; --! Sync signal (always '0')
-      hpos_o  : out integer;   --! Current horizontal position
-      vpos_o  : out integer;   --! Current vertical position
-      de_o    : out std_logic  --! Data enable signal
+      clk_i   : in  std_logic;
+      rst_i   : in  std_logic;
+      vclk_o  : out std_logic;
+      hsync_o : out std_logic;
+      vsync_o : out std_logic;
+      blank_o : out std_logic;
+      sync_o  : out std_logic;
+      hpos_o  : out integer;
+      vpos_o  : out integer;
+      de_o    : out std_logic
     );
   end component;
 
-  --! @brief Component declaration for the circle drawing logic.
   component draw_logic is
     port(
-      clk_i   : in  std_logic; --! Clock signal
-      rst_i   : in  std_logic; --! Reset signal
-      hpos_i  : in  integer;   --! Current horizontal position
-      vpos_i  : in  integer;   --! Current vertical position
-      r_o     : out std_logic_vector(7 downto 0); --! Red color (8 bits)
-      g_o     : out std_logic_vector(7 downto 0); --! Green color (8 bits)
-      b_o     : out std_logic_vector(7 downto 0)  --! Blue color (8 bits)
+      clk_i      : in  std_logic;
+      rst_i      : in  std_logic;
+      hpos_i     : in  integer;
+      vpos_i     : in  integer;
+      de_i       : in  std_logic;
+      angle_i    : in  std_logic_vector(7 downto 0);
+      distance_i : in  std_logic_vector(8 downto 0);
+      r_o        : out std_logic_vector(7 downto 0);
+      g_o        : out std_logic_vector(7 downto 0);
+      b_o        : out std_logic_vector(7 downto 0)
     );
   end component;
 
-  -- Internal signals
-  signal hpos  : integer; --! Current horizontal position
-  signal vpos  : integer; --! Current vertical position
+  signal hpos  : integer; --! Horizontal position
+  signal vpos  : integer; --! Vertical position
   signal de    : std_logic; --! Data enable signal
+  signal angle : std_logic_vector(7 downto 0) := "00000000"; --! (0 degrees)
+  signal distance : std_logic_vector(8 downto 0) := "011001001"; --! (201 cm)
 
 begin
 
-  --! @brief Instantiation of the VGA controller component.
+  -- Instantijacija VGA kontrolera
   vga_controller_inst : vga_controller
     port map(
       clk_i   => clk_i,
@@ -112,16 +114,19 @@ begin
       de_o    => de
     );
 
-  --! @brief Instantiation of the circle drawing logic component.
+  -- Instantijacija draw_logic modula
   draw_logic_inst : draw_logic
     port map(
-      clk_i  => clk_i,
-      rst_i  => rst_i,
-      hpos_i => hpos,
-      vpos_i => vpos,
-      r_o    => r_o,
-      g_o    => g_o,
-      b_o    => b_o
+      clk_i      => clk_i,
+      rst_i      => rst_i,
+      hpos_i     => hpos,
+      vpos_i     => vpos,
+      de_i       => de,
+      angle_i    => angle,
+      distance_i => distance,
+      r_o        => r_o,
+      g_o        => g_o,
+      b_o        => b_o
     );
 
 end architecture arch;
