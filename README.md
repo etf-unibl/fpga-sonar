@@ -15,7 +15,7 @@ All modules are synchronized to the same system clock (**clk**) and reset (**rst
 ![fpga_sonar](https://github.com/user-attachments/assets/d8b92e8a-8a8f-43a5-ae86-68276216fae8)
 _Picture 1.1_ Diagram representation of system
 
-Blue arrows are representing signals that are sent by main cotroler and orange lines are signals that main controller recieves.
+Blue arrows are representing signals that are sent by main cotroler and orange arrows are signals that main controller recieves.
 
 ---
 ## Components
