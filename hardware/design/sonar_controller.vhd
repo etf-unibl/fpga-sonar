@@ -54,8 +54,8 @@ architecture arch of sonar_controller is
   constant c_PULSE_HZ          : integer := 50;                    --! PWM frequency: 50 Hz
   constant c_PWM_PERIOD_CYCLES : integer := c_CLK_HZ / c_PULSE_HZ; --! Number of clock cycles per PWM period
 
-  constant c_MIN_ANGLE : integer := 0;    --! Minimum servo angle
-  constant c_MAX_ANGLE : integer := 180;  --! Maximum servo angle
+  constant c_MIN_ANGLE : integer := 0;                  --! Minimum servo angle
+  constant c_MAX_ANGLE : integer := 180;                --! Maximum servo angle
   constant c_FULL_CYCLE  : integer := 2 * c_MAX_ANGLE;  --! Full cycle for the triangular waveform (e.g., 358)
 
   --! @brief Signal declarations.
@@ -63,14 +63,15 @@ architecture arch of sonar_controller is
   signal pwm_period_counter : integer range 0 to c_PWM_PERIOD_CYCLES - 1 := 0; --! PWM cycle counter
   signal update_counter     : integer range 0 to g_UPDATE_PERIOD - 1 := 0;     --! Counter for PWM periods between angle updates
   signal phase              : integer range 0 to c_FULL_CYCLE := 0;            --! Current phase
-  signal hpos               : integer;   --! Horizontal position
-  signal vpos               : integer;   --! Vertical position
-  signal de                 : std_logic; --! Display enable signal
+  signal hpos               : integer;                      --! Horizontal position
+  signal vpos               : integer;                      --! Vertical position
+  signal de                 : std_logic;                    --! Display enable signal
   signal distance_cm        : std_logic_vector(8 downto 0); --! Measured distance in cm
-  signal done               : std_logic; --! Measurement complete indicator.
-  signal object_found       : std_logic; --! '1' if an object is detected.
-  signal sonar_start        : std_logic; --! Start measurement signal (active low)
+  signal done               : std_logic;                    --! Measurement complete indicator.
+  signal object_found       : std_logic;                    --! '1' if an object is detected.
+  signal sonar_start        : std_logic;                    --! Start measurement signal (active low)
 
+--! @brief Component declaration for the VGA module
   component vga_controller is
     port(
       clk_i   : in  std_logic; --! Clock signal
@@ -100,7 +101,8 @@ architecture arch of sonar_controller is
       b_o        : out std_logic_vector(7 downto 0)  --! Blue color output
     );
   end component;
-  --! @brief Component declaration for the Ultrasonic_Sensor.
+
+  --! @brief Component declaration for the Ultrasonic_Sensor
   component Ultrasonic_Sensor is
     port(
       clk_i          : in  std_logic; --! Clock signal
@@ -114,6 +116,7 @@ architecture arch of sonar_controller is
     );
   end component;
 
+--! @brief Component declaration for the RC_Servo module
   component rc_servo is
     port (
     clk_i   : in  std_logic;            --! Clock signal
