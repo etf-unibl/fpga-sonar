@@ -51,7 +51,7 @@ entity draw_logic is
     hPos_i      : in  integer;   --! Horizontal position
     vPos_i      : in  integer;   --! Vertical position
     de_i        : in  std_logic; --! Data enable signal
-    angle_i     : in  std_logic_vector(7 downto 0); --! Angle input (0-179)
+    angle_i     : in  unsigned(7 downto 0); --! Angle input (0-179)
     distance_i  : in  std_logic_vector(8 downto 0); --! Distance input (2-400)
     r_o         : out std_logic_vector(7 downto 0); --! Red color output
     g_o         : out std_logic_vector(7 downto 0); --! Green color output
@@ -131,7 +131,7 @@ begin
         obj_y <= 0;
       else
         -- Convert input values to integers
-        int_angle := to_integer(unsigned(angle_i));
+        int_angle := to_integer(angle_i);
         int_distance := to_integer(unsigned(distance_i));
 
         -- Validate angle and distance
