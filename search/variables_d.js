@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['t_5fstate_5ftype_0',['t_state_type',['../class_ultrasonic___sensor_1_1arch.html#aea9d88e25303c612cfe9d99be55c82b6',1,'Ultrasonic_Sensor::arch']]],
-  ['trigger_5fcounter_1',['trigger_counter',['../class_ultrasonic___sensor_1_1arch.html#acd0984e56a00f94d06a2e1a384db64d0',1,'Ultrasonic_Sensor::arch']]],
-  ['trigger_5fo_2',['trigger_o',['../class_sensor___controller.html#a1573d08c10135ce072a57256f5d8963e',1,'Sensor_Controller.trigger_o()'],['../class_ultrasonic___sensor.html#a1573d08c10135ce072a57256f5d8963e',1,'Ultrasonic_Sensor.trigger_o()']]]
+  ['servo_5fangle_0',['servo_angle',['../classservo__controller_1_1arch.html#a74991691774bccd3705be2404fac6ca6',1,'servo_controller::arch']]],
+  ['servo_5fpwm_5fo_1',['servo_pwm_o',['../classservo__controller.html#a21b0310ac24054b156786d4cca1b82fc',1,'servo_controller']]],
+  ['start_5fi_2',['start_i',['../class_sensor___controller.html#aa95b3129a62cbf95e328fe1bf0d3fcb9',1,'Sensor_Controller.start_i()'],['../class_ultrasonic___sensor.html#aa95b3129a62cbf95e328fe1bf0d3fcb9',1,'Ultrasonic_Sensor.start_i()']]],
+  ['state_3',['state',['../class_ultrasonic___sensor_1_1arch.html#af405aae4e05b2b0215d2a736739954f1',1,'Ultrasonic_Sensor::arch']]],
+  ['std_5flogic_5f1164_4',['std_logic_1164',['../classdecoder__2__4.html#acd03516902501cd1c7296a98e22c6fcb',1,'decoder_2_4.std_logic_1164()'],['../classdraw__logic.html#acd03516902501cd1c7296a98e22c6fcb',1,'draw_logic.std_logic_1164()'],['../classeight__bit__multiplier.html#acd03516902501cd1c7296a98e22c6fcb',1,'eight_bit_multiplier.std_logic_1164()'],['../classrc__servo.html#acd03516902501cd1c7296a98e22c6fcb',1,'rc_servo.std_logic_1164()'],['../class_sensor___controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'Sensor_Controller.std_logic_1164()'],['../classservo__controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'servo_controller.std_logic_1164()'],['../classtop__level.html#acd03516902501cd1c7296a98e22c6fcb',1,'top_level.std_logic_1164()'],['../class_ultrasonic___sensor.html#acd03516902501cd1c7296a98e22c6fcb',1,'Ultrasonic_Sensor.std_logic_1164()'],['../classvga__controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'vga_controller.std_logic_1164()']]],
+  ['sync_5fo_5',['sync_o',['../classtop__level.html#ac811ad0b31dca21155332c57980f8022',1,'top_level.sync_o()'],['../classvga__controller.html#ac811ad0b31dca21155332c57980f8022',1,'vga_controller.sync_o()']]]
 ];

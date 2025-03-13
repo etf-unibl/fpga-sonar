@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['res_5fo_0',['RES_o',['../classeight__bit__multiplier.html#a99587f97eac9328ba0a0f0fcebcad414',1,'eight_bit_multiplier']]],
-  ['reset_5fi_1',['reset_i',['../class_sensor___controller.html#a9699a0ac58ba84c79a1b062dd8a81e9e',1,'Sensor_Controller.reset_i()'],['../class_ultrasonic___sensor.html#a9699a0ac58ba84c79a1b062dd8a81e9e',1,'Ultrasonic_Sensor.reset_i()']]],
-  ['rst_5fi_2',['rst_i',['../classrc__servo.html#ab86c7a8eec3a8327e506892977f85708',1,'rc_servo.rst_i()'],['../classservo__controller.html#ab86c7a8eec3a8327e506892977f85708',1,'servo_controller.rst_i()']]]
+  ['phase_0',['phase',['../classservo__controller_1_1arch.html#a2ea2f2442b3ffd609f54f2e65552b712',1,'servo_controller::arch']]],
+  ['pwm_5fo_1',['pwm_o',['../classrc__servo.html#accd4769fde22eb60efba3b2923d05a72',1,'rc_servo']]],
+  ['pwm_5fperiod_5fcounter_2',['pwm_period_counter',['../classservo__controller_1_1arch.html#a309e6356b96a29fad6e223587301350a',1,'servo_controller::arch']]],
+  ['pwm_5freg_3',['pwm_reg',['../classrc__servo_1_1arch.html#a82cdb640353b1c4d0aec90ced1eafbce',1,'rc_servo::arch']]]
 ];

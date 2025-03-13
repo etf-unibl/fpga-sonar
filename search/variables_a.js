@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['phase_0',['phase',['../classservo__controller_1_1arch.html#a2ea2f2442b3ffd609f54f2e65552b712',1,'servo_controller::arch']]],
-  ['pwm_5fo_1',['pwm_o',['../classrc__servo.html#accd4769fde22eb60efba3b2923d05a72',1,'rc_servo']]],
-  ['pwm_5fperiod_5fcounter_2',['pwm_period_counter',['../classservo__controller_1_1arch.html#a309e6356b96a29fad6e223587301350a',1,'servo_controller::arch']]],
-  ['pwm_5freg_3',['pwm_reg',['../classrc__servo_1_1arch.html#a82cdb640353b1c4d0aec90ced1eafbce',1,'rc_servo::arch']]]
+  ['obj_5fx_0',['obj_x',['../classdraw__logic_1_1arch.html#adf1a022ac28af734dc3b7d3484adf299',1,'draw_logic::arch']]],
+  ['obj_5fy_1',['obj_y',['../classdraw__logic_1_1arch.html#a9c2246bf9c26dbc42165a3d958b6bb1e',1,'draw_logic::arch']]],
+  ['object_5ffound_5fo_2',['object_found_o',['../class_sensor___controller.html#accc6ea69e50260535a63d2ec8676027f',1,'Sensor_Controller.object_found_o()'],['../class_ultrasonic___sensor.html#accc6ea69e50260535a63d2ec8676027f',1,'Ultrasonic_Sensor.object_found_o()']]]
 ];

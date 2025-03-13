@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['servo_5fangle_0',['servo_angle',['../classservo__controller_1_1arch.html#a74991691774bccd3705be2404fac6ca6',1,'servo_controller::arch']]],
-  ['servo_5fpwm_5fo_1',['servo_pwm_o',['../classservo__controller.html#a21b0310ac24054b156786d4cca1b82fc',1,'servo_controller']]],
-  ['start_5fi_2',['start_i',['../class_sensor___controller.html#aa95b3129a62cbf95e328fe1bf0d3fcb9',1,'Sensor_Controller.start_i()'],['../class_ultrasonic___sensor.html#aa95b3129a62cbf95e328fe1bf0d3fcb9',1,'Ultrasonic_Sensor.start_i()']]],
-  ['state_3',['state',['../class_ultrasonic___sensor_1_1arch.html#af405aae4e05b2b0215d2a736739954f1',1,'Ultrasonic_Sensor::arch']]],
-  ['std_5flogic_5f1164_4',['std_logic_1164',['../classdecoder__2__4.html#acd03516902501cd1c7296a98e22c6fcb',1,'decoder_2_4.std_logic_1164()'],['../classeight__bit__multiplier.html#acd03516902501cd1c7296a98e22c6fcb',1,'eight_bit_multiplier.std_logic_1164()'],['../classrc__servo.html#acd03516902501cd1c7296a98e22c6fcb',1,'rc_servo.std_logic_1164()'],['../class_sensor___controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'Sensor_Controller.std_logic_1164()'],['../classservo__controller.html#acd03516902501cd1c7296a98e22c6fcb',1,'servo_controller.std_logic_1164()'],['../class_ultrasonic___sensor.html#acd03516902501cd1c7296a98e22c6fcb',1,'Ultrasonic_Sensor.std_logic_1164()']]]
+  ['r_5fo_0',['r_o',['../classdraw__logic.html#ac3992e2d3aee38edf6102ae0d9ef0393',1,'draw_logic.r_o()'],['../classtop__level.html#ac3992e2d3aee38edf6102ae0d9ef0393',1,'top_level.r_o()']]],
+  ['res_5fo_1',['RES_o',['../classeight__bit__multiplier.html#a99587f97eac9328ba0a0f0fcebcad414',1,'eight_bit_multiplier']]],
+  ['reset_5fi_2',['reset_i',['../class_sensor___controller.html#a9699a0ac58ba84c79a1b062dd8a81e9e',1,'Sensor_Controller.reset_i()'],['../class_ultrasonic___sensor.html#a9699a0ac58ba84c79a1b062dd8a81e9e',1,'Ultrasonic_Sensor.reset_i()']]],
+  ['rst_5fi_3',['rst_i',['../classdraw__logic.html#ab86c7a8eec3a8327e506892977f85708',1,'draw_logic.rst_i()'],['../classrc__servo.html#ab86c7a8eec3a8327e506892977f85708',1,'rc_servo.rst_i()'],['../classservo__controller.html#ab86c7a8eec3a8327e506892977f85708',1,'servo_controller.rst_i()'],['../classtop__level.html#ab86c7a8eec3a8327e506892977f85708',1,'top_level.rst_i()'],['../classvga__controller.html#ab86c7a8eec3a8327e506892977f85708',1,'vga_controller.rst_i()']]]
 ];
