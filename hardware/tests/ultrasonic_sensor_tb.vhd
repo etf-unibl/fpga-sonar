@@ -65,7 +65,7 @@ architecture arch of Ultrasonic_Sensor_tb is
   component Ultrasonic_Sensor is
     port (
         clk_i          : in  std_logic;
-        reset_i        : in  std_logic;
+        rst_i        : in  std_logic;
         start_i        : in  std_logic;
         echo_i         : in  std_logic;
         trigger_o      : out std_logic;
@@ -79,7 +79,7 @@ begin
   uut : Ultrasonic_Sensor
       port map (
           clk_i          => clk_tb,
-          reset_i        => reset_tb,
+          rst_i          => reset_tb,
           start_i        => start_tb,
           echo_i         => echo_tb,
           trigger_o      => trigger_tb,
@@ -138,7 +138,7 @@ begin
         check_equal(object_found_tb, '1', "Object found status");
 
       elsif run("test_timeout_distance") then
-        -- Test exceeding maximum distance (>400 cm)
+        -- Test exceeding maximum distance (> 400 cm)
         start_tb <= '0';
         pulse_echo(401 * CONVERSION_FACTOR); -- Duration longer than maximum (timeout)
         check_equal(unsigned(distance_cm_tb), 511, "Timeout distance check");

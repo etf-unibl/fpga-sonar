@@ -48,7 +48,7 @@ use ieee.numeric_std.all;
 entity Ultrasonic_Sensor is
   port (
     clk_i          : in  std_logic;                     --! 50 MHz clock input.
-    reset_i        : in  std_logic;                     --! Asynchronous reset (active low).
+    rst_i          : in  std_logic;                     --! Asynchronous reset (active low).
     start_i        : in  std_logic;                     --! Start measurement signal (active low).
     echo_i         : in  std_logic;                     --! Echo input from HC-SR04 sensor.
     trigger_o      : out std_logic;                     --! Trigger output to HC-SR04.
@@ -104,9 +104,9 @@ begin
   --!         - MEASURE_ECHO: Captures echo pulse duration
   --!         - DONE_STATE: Finalizes calculation and signals assignments
   -------------------------------------------------------------------------
-  process(clk_i, reset_i)
+  process(clk_i, rst_i)
   begin
-    if reset_i = '0' then
+    if rst_i = '0' then
       state           <= IDLE;                --! Reset state to IDLE.
       done_reg        <= '0';                 --! Clear the done indicator.
       trigger_o         <= '0';               --! Ensure trigger is deasserted.
