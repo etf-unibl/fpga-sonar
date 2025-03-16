@@ -82,3 +82,7 @@ The chosen FPGA Platform for hosting the design is **DE1-SoC Board**. The DE1-So
 Is used to simplify and automate the process of testing/verifying the used hardware designs.
 - **Userguide:**
   [VUnit Framework Userguide](https://github.com/etf-unibl/fpga-sonar/blob/main/docs/VUnitFramework_UserGuide.md)
+
+---
+## Demonstration and testing
+You can watch the demonstration and testing of our model at the following link: https://youtu.be/90PM5xx9JTA
