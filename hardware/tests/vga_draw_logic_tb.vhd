@@ -116,7 +116,7 @@ architecture arch of vga_draw_logic_tb is
       hpos_i     : in  integer;
       vpos_i     : in  integer;
       de_i       : in  std_logic;
-      angle_i    : in  std_logic_vector(7 downto 0);
+      angle_i    : in  unsigned(7 downto 0);
       distance_i : in  std_logic_vector(8 downto 0);
       r_o        : out std_logic_vector(7 downto 0);
       g_o        : out std_logic_vector(7 downto 0);
@@ -139,12 +139,12 @@ architecture arch of vga_draw_logic_tb is
   signal hpos     : integer;
   signal vpos     : integer;
   signal de       : std_logic;
-  signal angle    : std_logic_vector(7 downto 0) := "00000000"; --! (0 degrees)
-  signal distance : std_logic_vector(8 downto 0) := "011001001"; --! (201 cm)
+  signal angle    : unsigned(7 downto 0) := "00000000"; -- (0 degrees)
+  signal distance : std_logic_vector(8 downto 0) := "011001001"; -- (201 cm)
   -- Blinking signals
-  signal blink_counter   : integer   := 0; --! Counter for blinking
-  signal blink_state     : std_logic := '0'; --! Blink state (0 = off, 1 = on)
-  constant c_BLINK_RATE  : integer   := 3000000; --! Blink rate
+  signal blink_counter   : integer   := 0; -- Counter for blinking
+  signal blink_state     : std_logic := '0'; -- Blink state (0 = off, 1 = on)
+  constant c_BLINK_RATE  : integer   := 3000000; -- Blink rate
 
 
 begin
