@@ -85,4 +85,9 @@ Is used to simplify and automate the process of testing/verifying the used hardw
 
 ---
 ## Demonstration and testing
-You can watch the demonstration and testing of our model at the following link: https://youtu.be/90PM5xx9JTA
+
+https://github.com/user-attachments/assets/06c46858-8ee9-491e-80bd-b793e5d01359
+
+
+You can also watch this video at the following link: https://youtu.be/90PM5xx9JTA
+
