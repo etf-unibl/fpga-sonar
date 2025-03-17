@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['top_5flevel_2evhd_0',['top_level.vhd',['../top__level_8vhd.html',1,'']]]
+  ['vga_5fcontroller_2evhd_0',['vga_controller.vhd',['../vga__controller_8vhd.html',1,'']]]
 ];
