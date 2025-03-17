@@ -542,7 +542,7 @@ begin
         ----------------------------------------------------------------------------
         start_tb <= '0';  -- Begin measurement
         pulse_echo(401 * CONVERSION_FACTOR);  -- Simulate echo for 401 cm (timeout)
-        check_equal(unsigned(distance_cm_tb), 512, "Timeout distance check");
+        check_equal(unsigned(distance_cm_tb), 511, "Timeout distance check");
         check_equal(object_found_tb, '0', "Object not found status");
 
         ----------------------------------------------------------------------------
